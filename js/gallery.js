@@ -1,3 +1,4 @@
+"use strict";
 const images = [
     {
         preview: 'https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820__480.jpg',
@@ -46,24 +47,30 @@ const images = [
     },
 ];
 const gallery = document.querySelector(".gallery");
+
 function createMarkup(arr) {
-    return arr.map(image => `
-        <li class="gallery__item">
-        </li>
-        <a class="gallery__link" href="${image.original}">
-    `).join("");
+    return arr.map((item) => `
+    <li class="gallery-item" datsa-id="${item.original}">
+    <a class="gallery-link" href="${item.original}">
+    <img
+      class="gallery-image"
+      src="${item.preview}"
+      data-source="${item.original}"
+      alt="${item.description}"
+      width="360"
+    />
+  </a>
+</li>`).join("");
 }
 
 gallery.insertAdjacentHTML("beforeend", createMarkup(images));
 
-gallery.addEventListener("click", function(event) {
+gallery.addEventListener("click", (event) => {
     event.preventDefault();
+    if (event.target.nodeName !== "IMG") return;
 
-    const target = event.target;
-    if (target.nodeName !== "IMG") return;
-
-    const originalImage = target.dataset.source;
-    const description = target.alt;
+    const originalImage = event.target.dataset.source;
+    const description = event.target.alt;
 
     const instance = basicLightbox.create(`
     <img src="${originalImage}" alt="${description}" class="modal-image" />
